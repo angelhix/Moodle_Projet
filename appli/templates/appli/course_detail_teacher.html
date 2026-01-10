@@ -1,0 +1,20 @@
+{% extends "appli/base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="mb-3">{{ course.titre }}</h1>
+    <p class="text-muted">{{ course.description|default:"Pas de description" }}</p>
+
+    <h4>Étudiants inscrits ({{ course.enrollment_set.count }})</h4>
+    <ul class="list-group mb-4">
+        {% for enrollment in course.enrollment_set.all %}
+            <li class="list-group-item">{{ enrollment.student.username }} - {{ enrollment.student.email }}</li>
+        {% empty %}
+            <li class="list-group-item">Aucun étudiant inscrit pour le moment.</li>
+        {% endfor %}
+    </ul>
+
+    <a href="{% url 'courses_teacher' %}" class="btn btn-secondary">Retour aux cours</a>
+    <a href="{% url 'create_assignment' course.id %}" class="btn btn-warning">Créer un devoir</a>
+</div>
+{% endblock %}

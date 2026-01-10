@@ -1,0 +1,134 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Inscription Étudiant</title>
+
+<style>
+    * {margin:0;padding:0;box-sizing:border-box;}
+    body, html {height:100%;font-family:'Inter', sans-serif;}
+
+    body {
+        background: linear-gradient(135deg, #2196F3, #1976D2, #64B5F6);
+        background-size: 400% 400%;
+        animation: gradientShift 15s ease infinite;
+        display:flex;
+        justify-content:center;
+        align-items:center;
+    }
+
+    @keyframes gradientShift {
+        0%,100% {background-position:0% 50%;}
+        50% {background-position:100% 50%;}
+    }
+
+    .signup-container {
+        background: rgba(255,255,255,0.08);
+        backdrop-filter: blur(20px);
+        border-radius: 20px;
+        padding: 3rem;
+        width: 100%;
+        max-width: 400px;
+        color: white;
+        text-align: center;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        animation: fadeInUp 1s ease;
+    }
+
+    @keyframes fadeInUp {
+        from {opacity:0; transform:translateY(50px);}
+        to {opacity:1; transform:translateY(0);}
+    }
+
+    h1 {
+        font-size:2rem;
+        margin-bottom:1.5rem;
+    }
+
+    form {
+        display:flex;
+        flex-direction:column;
+        gap:1rem;
+    }
+
+    input {
+        padding:0.8rem 1rem;
+        border:none;
+        border-radius:10px;
+        font-size:1rem;
+        outline:none;
+        background: rgba(255,255,255,0.2);
+        color:white;
+        transition:all 0.3s;
+    }
+
+    input::placeholder {
+        color: rgba(255,255,255,0.7);
+    }
+
+    input:focus {
+        background: rgba(255,255,255,0.3);
+        box-shadow:0 0 10px rgba(255,255,255,0.5);
+    }
+
+    button {
+        padding:0.8rem 1rem;
+        border:none;
+        border-radius:50px;
+        background: linear-gradient(135deg, #2196F3, #1976D2);
+        color:white;
+        font-size:1rem;
+        font-weight:600;
+        cursor:pointer;
+        transition: all 0.3s;
+    }
+
+    button:hover {
+        transform:translateY(-3px);
+        box-shadow:0 10px 25px rgba(33,150,243,0.5);
+    }
+
+    .error-msg {
+        background: rgba(255,0,0,0.3);
+        padding:0.6rem;
+        border-radius:8px;
+        margin-bottom:1rem;
+    }
+
+    a {
+        color:white;
+        font-size:0.9rem;
+        margin-top:1rem;
+        display:inline-block;
+        text-decoration:underline;
+    }
+
+    a:hover {
+        color:#ddd;
+    }
+</style>
+</head>
+
+<body>
+<div class="signup-container">
+    <h1>Créer un compte Étudiant</h1>
+
+    {% if error %}
+        <div class="error-msg">{{ error }}</div>
+    {% endif %}
+
+    <form method="POST">
+        {% csrf_token %}
+        <input type="text" name="username" placeholder="Nom d'utilisateur" required>
+        <input type="email" name="email" placeholder="Adresse email" required>
+        <input type="password" name="password1" placeholder="Mot de passe" required>
+        <input type="password" name="password2" placeholder="Confirmer le mot de passe" required>
+        <button type="submit">S'inscrire</button>
+    </form>
+
+    <a href="{% url 'login_student' %}">← Déjà un compte ? Connectez-vous</a>
+</div>
+</body>
+</html>

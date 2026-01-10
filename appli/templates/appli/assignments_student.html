@@ -1,0 +1,11 @@
+<h1>Devoirs - {{ course.titre }}</h1>
+
+{% for assignment in assignments %}
+    <div>
+        <h3>{{ assignment.titre }}</h3>
+        <p>{{ assignment.description }}</p>
+        <p>📅 Date limite : {{ assignment.date_limite }}</p>
+    </div>
+{% empty %}
+    <p>Aucun devoir pour ce cours</p>
+{% endfor %}

@@ -1,0 +1,89 @@
+{% extends "appli/base.html" %}
+
+{% block content %}
+<div class="header">
+    <h1>Mes devoirs</h1>
+    <a href="{% url 'assignment_add_teacher' %}" class="btn btn-primary">Créer un devoir</a>
+</div>
+
+<div class="grid">
+    {% for a in assignments %}
+    <div class="card">
+        <h2>{{ a.titre }}</h2>
+        <p>📚 Cours : {{ a.course.titre }}</p>
+        <p class="deadline">⏰ Date limite : {{ a.date_limite|date:"d/m/Y" }}</p>
+        <p>👥 {{ a.submission_set.count }} soumissions reçues</p>
+        <div class="actions">
+            <a href="{% url 'assignment_detail_teacher' a.id %}" class="btn btn-info">Voir les soumissions</a>
+            <a href="{% url 'grade_assignment_teacher' a.id %}" class="btn btn-success">Noter & Commenter</a>
+        </div>
+    </div>
+    {% empty %}
+    <p>Vous n'avez créé aucun devoir pour l'instant.</p>
+    {% endfor %}
+</div>
+
+<style>
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.card {
+    background: #fff;
+    border-radius: 8px;
+    padding: 1rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.card h2 {
+    margin-top: 0;
+    color: #333;
+}
+
+.card p {
+    color: #555;
+}
+
+.deadline {
+    font-weight: bold;
+    color: #d9534f; /* rouge pour alerter sur la date limite */
+}
+
+.actions {
+    margin-top: 1rem;
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.btn {
+    padding: 0.4rem 0.8rem;
+    border-radius: 4px;
+    text-decoration: none;
+    color: white;
+    font-weight: bold;
+    transition: 0.2s;
+}
+
+.btn-primary { background-color: #007bff; }
+.btn-success { background-color: #28a745; }
+.btn-info { background-color: #17a2b8; }
+
+.btn:hover {
+    opacity: 0.85;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+</style>
+{% endblock %}

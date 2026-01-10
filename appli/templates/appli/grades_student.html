@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Mes notes</title>
+
+<style>
+    body {
+        margin:0;
+        font-family:'Inter', sans-serif;
+        background: linear-gradient(135deg,#1a237e,#0d47a1);
+        color:white;
+        min-height:100vh;
+        display:flex;
+    }
+
+    /* ================= SIDEBAR ================= */
+    .sidebar {
+        width:220px;
+        background: rgba(0,0,0,0.6);
+        backdrop-filter: blur(15px);
+        display:flex;
+        flex-direction:column;
+        padding:2rem 1rem;
+    }
+
+    .sidebar .logo {
+        font-size:1.5rem;
+        font-weight:700;
+        margin-bottom:2rem;
+        cursor:pointer;
+        text-align:center;
+    }
+
+    .sidebar a {
+        color:white;
+        text-decoration:none;
+        margin:0.6rem 0;
+        font-weight:500;
+        display:flex;
+        align-items:center;
+        gap:10px;
+        padding:0.6rem 0.8rem;
+        border-radius:12px;
+        transition: all 0.3s ease;
+        position: relative;
+    }
+
+    .sidebar a:hover {
+        background: rgba(255,255,255,0.15);
+        transform: translateX(6px);
+    }
+
+    .sidebar a.active {
+        background: linear-gradient(135deg, #ff9800, #ffc107);
+        color: #1a237e;
+        font-weight:700;
+    }
+
+    .sidebar a.active::before {
+        content: '';
+        position: absolute;
+        left: -10px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 6px;
+        height: 60%;
+        background: #ffc107;
+        border-radius: 5px;
+    }
+
+    /* ================= MAIN ================= */
+    .main-content {
+        flex:1;
+        padding:2rem;
+    }
+
+    h1 {
+        margin-bottom:2rem;
+    }
+
+    /* ================= TABLE ================= */
+    .table-container {
+        background: rgba(255,255,255,0.1);
+        backdrop-filter: blur(20px);
+        border-radius:20px;
+        padding:1.5rem;
+        box-shadow:0 10px 30px rgba(0,0,0,0.3);
+        overflow-x:auto;
+    }
+
+    table {
+        width:100%;
+        border-collapse:collapse;
+    }
+
+    th, td {
+        padding:1rem;
+        text-align:left;
+    }
+
+    th {
+        font-size:0.9rem;
+        text-transform:uppercase;
+        letter-spacing:1px;
+        color:#ffc107;
+        border-bottom:1px solid rgba(255,255,255,0.3);
+    }
+
+    tr {
+        transition: background 0.3s;
+    }
+
+    tr:hover {
+        background: rgba(255,255,255,0.08);
+    }
+
+    td {
+        font-size:0.95rem;
+    }
+
+    .note {
+        font-weight:700;
+        font-size:1.1rem;
+        color:#4caf50;
+    }
+
+    .pending {
+        font-style:italic;
+        color:#ffcc80;
+    }
+
+    .empty {
+        text-align:center;
+        padding:2rem;
+        font-style:italic;
+        opacity:0.8;
+    }
+</style>
+</head>
+
+<body>
+
+<!-- ================= SIDEBAR ================= -->
+<div class="sidebar">
+    <div class="logo" onclick="window.location.href='{% url 'profile_student' %}'">
+        🎓 {{ request.user.username }}
+    </div>
+
+    <a href="{% url 'student_dashboard' %}">🏠 Dashboard</a>
+    <a href="{% url 'courses_student' %}">📚 Mes cours</a>
+    <a href="{% url 'grades_student' %}" class="active">📊 Mes notes</a>
+    <a href="{% url 'student_profile_print' %}" target="_blank">🖨️ Fiche signalétique</a>
+    <a href="{% url 'logout' %}">🚪 Déconnexion</a>
+</div>
+
+<!-- ================= MAIN ================= -->
+<div class="main-content">
+    <h1>📊 Mes notes</h1>
+
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Devoir</th>
+                    <th>Cours</th>
+                    <th>Note</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for s in submissions %}
+                <tr>
+                    <td>{{ s.assignment.titre }}</td>
+                    <td>{{ s.assignment.cours.titre }}</td>
+                    <td>
+                        {% if s.note %}
+                            <span class="note">{{ s.note }}/20</span>
+                        {% else %}
+                            <span class="pending">En attente</span>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="3" class="empty">
+                        Aucune note pour le moment
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+</body>
+</html>

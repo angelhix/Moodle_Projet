@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Mes cours</title>
+
+<style>
+    body {
+        margin: 0;
+        font-family: 'Inter', sans-serif;
+        background: linear-gradient(135deg,#1a237e,#0d47a1);
+        color: white;
+        min-height: 100vh;
+        display: flex;
+    }
+
+    /* ================= SIDEBAR ================= */
+    .sidebar {
+        width: 220px;
+        background: rgba(0,0,0,0.6);
+        backdrop-filter: blur(15px);
+        display: flex;
+        flex-direction: column;
+        padding: 2rem 1rem;
+    }
+
+    .sidebar .logo {
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin-bottom: 2rem;
+        text-align: center;
+    }
+
+    .sidebar a {
+        color: white;
+        text-decoration: none;
+        margin: 0.6rem 0;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 0.6rem 0.8rem;
+        border-radius: 12px;
+        transition: all 0.3s ease;
+        position: relative;
+    }
+
+    /* Hover */
+    .sidebar a:hover {
+        background: rgba(255,255,255,0.15);
+        transform: translateX(6px);
+    }
+
+    /* Élément actif */
+    .sidebar a.active {
+        background: linear-gradient(135deg, #ff9800, #ffc107);
+        color: #1a237e;
+        font-weight: 700;
+    }
+
+    .sidebar a.active::before {
+        content: '';
+        position: absolute;
+        left: -10px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 6px;
+        height: 60%;
+        background: #ffc107;
+        border-radius: 5px;
+    }
+
+    /* ================= MAIN ================= */
+    .main-content {
+        flex: 1;
+        padding: 2rem;
+        overflow-y: auto;
+    }
+
+    h1 {
+        margin-bottom: 2rem;
+        font-size: 2.2rem;
+    }
+
+    /* ================= COURSES ================= */
+    .courses-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px,1fr));
+        gap: 1.5rem;
+        max-width: 1200px;
+    }
+
+    .course-card {
+        background: rgba(255,255,255,0.12);
+        backdrop-filter: blur(20px);
+        border-radius: 20px;
+        padding: 1.5rem;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        transition: all 0.3s ease;
+    }
+
+    .course-card:hover {
+        transform: translateY(-8px);
+        background: rgba(255,255,255,0.2);
+    }
+
+    .course-title {
+        font-size: 1.3rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+    }
+
+    .course-description {
+        font-size: 0.95rem;
+        opacity: 0.9;
+        margin-bottom: 1.2rem;
+        line-height: 1.4;
+    }
+
+    .course-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .teacher {
+        font-size: 0.9rem;
+        opacity: 0.85;
+    }
+
+    .course-footer a {
+        text-decoration: none;
+        background: #ff9800;
+        color: #1a237e;
+        padding: 0.6rem 1.2rem;
+        border-radius: 50px;
+        font-weight: 600;
+        font-size: 0.9rem;
+        transition: all 0.3s;
+    }
+
+    .course-footer a:hover {
+        background: #ffc107;
+        transform: scale(1.05);
+    }
+
+    .empty {
+        opacity: 0.9;
+        font-size: 1.1rem;
+        margin-top: 4rem;
+    }
+</style>
+</head>
+<body>
+
+<!-- ================= SIDEBAR ================= -->
+<div class="sidebar">
+    <div class="logo">🎓 {{ request.user.username }}</div>
+
+    <a href="{% url 'student_dashboard' %}">🏠 Dashboard</a>
+    <a href="{% url 'courses_student' %}" class="active">📚 Mes cours</a>
+    <a href="{% url 'grades_student' %}">📊 Mes notes</a>
+    <a href="{% url 'profile_student' %}">👤 Mon profil</a>
+    <a href="{% url 'logout' %}">🚪 Déconnexion</a>
+</div>
+
+<!-- ================= MAIN CONTENT ================= -->
+<div class="main-content">
+    <h1>📚 Mes cours</h1>
+
+    <div class="courses-container">
+        {% for enrollment in cours %}
+            <div class="course-card">
+                <div class="course-title">
+                    {{ enrollment.cours.titre }}
+                </div>
+
+                <div class="course-description">
+                    {{ enrollment.cours.description|default:"Aucune description fournie." }}
+                </div>
+
+                <div class="course-footer">
+                    <span class="teacher">👨‍🏫 {{ enrollment.cours.teacher.username }}</span>
+
+                    <a href="{% url 'assignments_student' enrollment.cours.id %}">
+                        📄 Voir les devoirs
+                    </a>
+                </div>
+            </div>
+        {% empty %}
+            <div class="empty">
+                Aucun cours ne vous a encore été attribué 📭
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+</body>
+</html>

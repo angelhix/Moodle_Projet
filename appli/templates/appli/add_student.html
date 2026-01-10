@@ -1,0 +1,23 @@
+{% extends "appli/base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1>Ajouter des étudiants au cours: {{ course.titre }}</h1>
+
+    <form method="post">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="studentSelect" class="form-label">Choisir un étudiant</label>
+            <select id="studentSelect" name="student_id" class="form-select" required>
+                <option value="">Sélectionnez un étudiant...</option>
+                {% for student in students %}
+                    <option value="{{ student.id }}">{{ student.username }} - {{ student.email }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary">Ajouter l'étudiant</button>
+    </form>
+
+    <a href="{% url 'courses_teacher_detail' course.id %}" class="btn btn-secondary mt-3">Retour au cours</a>
+</div>
+{% endblock %}

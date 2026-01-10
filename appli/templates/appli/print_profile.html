@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Fiche signalétique - {{ student.username }}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 2rem;
+            background: #fff;
+            color: #000;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+        th, td {
+            padding: 10px;
+            border: 1px solid #333;
+        }
+        th {
+            background: #f0f0f0;
+        }
+        .print-button {
+            margin: 1rem 0;
+            display: block;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <h1>Fiche signalétique</h1>
+    <div class="print-button">
+        <button onclick="window.print()">🖨️ Imprimer</button>
+    </div>
+    <table>
+        <tr>
+            <th>Nom d'utilisateur</th>
+            <td>{{ student.username }}</td>
+        </tr>
+        <tr>
+            <th>Prénom</th>
+            <td>{{ student.first_name|default:"-" }}</td>
+        </tr>
+        <tr>
+            <th>Nom</th>
+            <td>{{ student.last_name|default:"-" }}</td>
+        </tr>
+        <tr>
+            <th>Email</th>
+            <td>{{ student.email|default:"-" }}</td>
+        </tr>
+        <tr>
+            <th>Date d'inscription</th>
+            <td>{{ student.date_joined|date:"d/m/Y H:i" }}</td>
+        </tr>
+    </table>
+</body>
+</html>

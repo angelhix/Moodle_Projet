@@ -1,0 +1,88 @@
+{% extends "appli/base.html" %}
+
+{% block content %}
+<div class="header">
+    <h1>Mes cours</h1>
+   <a href="{% url 'course_add_teacher' %}" class="btn btn-primary">Ajouter un cours</a>
+
+</div>
+
+<div class="grid">
+    {% for c in courses %}
+    <div class="card">
+        <h2>{{ c.titre }}</h2>
+        <p>{{ c.description|default:"Pas de description" }}</p>
+      <p><strong>Étudiants inscrits :</strong> {{ c.enrollments.count }}</p>
+
+<div class="actions">
+    <a href="{% url 'courses_teacher_detail' c.id %}" class="btn btn-info">Voir le cours</a>
+    <a href="{% url 'add_student_to_course' c.id %}" class="btn btn-success">Ajouter des étudiants</a>
+    <a href="{% url 'create_assignment' c.id %}" class="btn btn-warning">Créer un devoir</a>
+</div>
+
+
+    </div>
+    {% empty %}
+    <p>Vous n'avez aucun cours pour l'instant.</p>
+    {% endfor %}
+</div>
+
+<style>
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.card {
+    background: #fff;
+    border-radius: 8px;
+    padding: 1rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.card h2 {
+    margin-top: 0;
+    color: #333;
+}
+
+.card p {
+    color: #555;
+}
+
+.actions {
+    margin-top: 1rem;
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.btn {
+    padding: 0.4rem 0.8rem;
+    border-radius: 4px;
+    text-decoration: none;
+    color: white;
+    font-weight: bold;
+    transition: 0.2s;
+}
+
+.btn-primary { background-color: #007bff; }
+.btn-success { background-color: #28a745; }
+.btn-warning { background-color: #ffc107; color: #333; }
+.btn-info { background-color: #17a2b8; }
+
+.btn:hover {
+    opacity: 0.85;
+}
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+</style>
+{% endblock %}

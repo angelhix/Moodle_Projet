@@ -1,0 +1,29 @@
+{% extends "appli/base.html" %}
+
+{% block content %}
+<h1>Soumissions reçues</h1>
+<table>
+    <thead>
+        <tr>
+            <th>Étudiant</th>
+            <th>Devoir</th>
+            <th>Cours</th>
+            <th>Note</th>
+            <th>Date de soumission</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for s in submissions %}
+        <tr>
+            <td>{{ s.student.username }}</td>
+            <td>{{ s.assignment.titre }}</td>
+            <td>{{ s.assignment.course.titre }}</td>
+            <td>{{ s.note|default:"En attente" }}</td>
+            <td>{{ s.date_soumission|date:"d/m/Y H:i" }}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="5">Aucune soumission pour l'instant</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

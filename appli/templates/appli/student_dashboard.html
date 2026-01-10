@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Dashboard Étudiant</title>
+
+<style>
+    body {
+        margin:0;
+        font-family:'Inter', sans-serif;
+        background: linear-gradient(135deg,#1a237e,#0d47a1);
+        color:white;
+        min-height:100vh;
+        display:flex;
+    }
+
+    /* ================= SIDEBAR ================= */
+    .sidebar {
+        width:220px;
+        background: rgba(0,0,0,0.6);
+        backdrop-filter: blur(15px);
+        display:flex;
+        flex-direction:column;
+        padding:2rem 1rem;
+    }
+
+    .sidebar .logo {
+        font-size:1.5rem;
+        font-weight:700;
+        margin-bottom:2rem;
+        cursor:pointer;
+        text-align:center;
+    }
+
+    .sidebar a {
+        color:white;
+        text-decoration:none;
+        margin:0.6rem 0;
+        font-weight:500;
+        display:flex;
+        align-items:center;
+        gap:10px;
+        padding:0.6rem 0.8rem;
+        border-radius:12px;
+        transition: all 0.3s ease;
+        position: relative;
+    }
+
+    /* Hover */
+    .sidebar a:hover {
+        background: rgba(255,255,255,0.15);
+        transform: translateX(6px);
+    }
+
+    /* Lien actif */
+    .sidebar a.active {
+        background: linear-gradient(135deg, #ff9800, #ffc107);
+        color: #1a237e;
+        font-weight:700;
+    }
+
+    .sidebar a.active::before {
+        content: '';
+        position: absolute;
+        left: -10px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 6px;
+        height: 60%;
+        background: #ffc107;
+        border-radius: 5px;
+    }
+
+    /* ================= MAIN ================= */
+    .main-content {
+        flex:1;
+        padding:2rem;
+    }
+
+    h1 {
+        margin-bottom:2rem;
+    }
+
+    .grid {
+        display:grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px,1fr));
+        gap:1.5rem;
+    }
+
+    .card {
+        background: rgba(255,255,255,0.1);
+        backdrop-filter: blur(20px);
+        border-radius:20px;
+        padding:1.5rem;
+        box-shadow:0 10px 30px rgba(0,0,0,0.3);
+        transition: transform 0.3s, background 0.3s;
+        cursor:pointer;
+    }
+
+    .card:hover {
+        transform: translateY(-5px);
+        background: rgba(255,255,255,0.2);
+    }
+
+    .badge {
+        display:inline-block;
+        padding:0.3rem 0.8rem;
+        border-radius:50px;
+        font-size:0.8rem;
+        background:#ff9800;
+        margin-bottom:0.5rem;
+    }
+
+    .note {
+        font-size:1.5rem;
+        font-weight:700;
+        color:#4caf50;
+    }
+
+    .deadline {
+        color:#ff5252;
+        font-weight:600;
+    }
+</style>
+</head>
+<body>
+
+<!-- ================= SIDEBAR ================= -->
+<div class="sidebar">
+    <div class="logo" onclick="window.location.href='{% url 'profile_student' %}'">
+        🎓 {{ request.user.username }}
+    </div>
+
+    <a href="{% url 'student_dashboard' %}" class="active">🏠 Dashboard</a>
+    <a href="{% url 'courses_student' %}">📚 Mes cours</a>
+    <a href="{% url 'grades_student' %}">📊 Mes notes</a>
+    <a href="{% url 'student_profile_print' %}" target="_blank">🖨️ Fiche signalétique</a>
+    <a href="{% url 'logout' %}">🚪 Déconnexion</a>
+</div>
+
+<!-- ================= MAIN CONTENT ================= -->
+<div class="main-content">
+    <h1>Bienvenue {{ request.user.username }}</h1>
+
+    <div class="grid">
+        <!-- COURS -->
+        {% for c in cours %}
+        <div class="card" onclick="window.location.href='{% url 'courses_student' %}'">
+            <h2>📚 {{ c.titre }}</h2>
+            <p>{{ c.description|default:'Pas de description' }}</p>
+        </div>
+        {% empty %}
+        <div class="card">Aucun cours inscrit</div>
+        {% endfor %}
+
+        <!-- DEVOIRS (APERÇU) -->
+        {% for a in upcoming_assignments %}
+        <div class="card" onclick="window.location.href='{% url 'courses_student' %}'">
+            <span class="badge">À rendre</span>
+            <h2>📝 {{ a.titre }}</h2>
+            <p class="deadline">⏰ {{ a.date_limite|date:"d/m/Y" }}</p>
+        </div>
+        {% empty %}
+        <div class="card">Rien d’urgent 🎉</div>
+        {% endfor %}
+
+        <!-- NOTES -->
+        {% for s in submissions %}
+        <div class="card" onclick="window.location.href='{% url 'grades_student' %}'">
+            <h2>📊 {{ s.assignment.titre }}</h2>
+            <p>
+                {% if s.note %}
+                    <span class="note">{{ s.note }}/20</span>
+                {% else %}
+                    En attente
+                {% endif %}
+            </p>
+        </div>
+        {% empty %}
+        <div class="card">Aucune note</div>
+        {% endfor %}
+    </div>
+</div>
+
+</body>
+</html>
